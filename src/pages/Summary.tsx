@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Youtube, Loader2, BookOpen, Link as LinkIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { generateVideoSummary } from '@/services/gemini';
+import AiAvatar from '@/components/AiAvatar';
 
 interface SummaryPoint {
   heading: string;
@@ -50,6 +51,14 @@ const Summary = () => {
       setLoading(false);
     }
   };
+
+  const getSummaryText = () => {
+    if (!summary) return '';
+    return `${summary.title}. ${summary.points.map((point, index) => 
+      `Point ${index + 1}: ${point.heading}. ${point.description}`
+    ).join('. ')}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <motion.div
@@ -109,6 +118,7 @@ const Summary = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               className="p-6 rounded-lg bg-gray-800/50 backdrop-blur-lg border border-gray-700"
+            
             >
               <div className="flex items-start gap-3 mb-4">
                 <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-500 text-lg font-semibold">
@@ -145,6 +155,7 @@ const Summary = () => {
               </div>
             </motion.div>
           ))}
+          <AiAvatar text={getSummaryText()} />
         </motion.div>
       )}
     </div>

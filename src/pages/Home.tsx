@@ -16,7 +16,7 @@ const Home = () => {
           Transform Your Learning Experience
         </h1>
         <p className="text-xl text-gray-300 mb-8">
-          Turn any educational YouTube video into interactive summaries and quizzes powered by AI
+          Turn any educational YouTube video into interactive summaries, quizzes and RoadMaps powered by AI
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
