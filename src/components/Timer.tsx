@@ -60,12 +60,12 @@ const Timer = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`p-4 rounded-lg bg-gray-800/50 backdrop-blur-lg border border-gray-700 text-center ${
-        isMinimized ? 'w-auto' : 'w-64'
+      className={`p-3 rounded-lg bg-gray-800/50 backdrop-blur-lg border border-gray-700 text-center ${
+        isMinimized ? 'w-auto' : 'w-48'
       }`}
     >
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold">Focus Timer</h3>
+        <h3 className="text-base font-bold">Focus Timer</h3>
         <div className="flex gap-2">
           <Button
             onClick={toggleMinimize}
@@ -112,7 +112,7 @@ const Timer = () => {
         </motion.div>
       )}
 
-      <div className="text-3xl font-mono mb-4 text-purple-400">
+      <div className="text-2xl font-mono mb-3 text-purple-400">
         {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
       </div>
 
@@ -120,19 +120,19 @@ const Timer = () => {
         <div className="flex justify-center gap-4">
           <Button
             onClick={toggleTimer}
-            className="bg-purple-500 hover:bg-purple-600"
+            className="bg-purple-500 hover:bg-purple-600 h-8 w-8 p-0"
           >
             {isActive ? (
-              <Pause className="h-5 w-5" />
+              <Pause className="h-4 w-4" />
             ) : (
-              <Play className="h-5 w-5" />
+              <Play className="h-4 w-4" />
             )}
           </Button>
           <Button
             onClick={resetTimer}
-            className="bg-gray-700 hover:bg-gray-600"
+            className="bg-gray-700 hover:bg-gray-600 h-8 w-8 p-0"
           >
-            <RefreshCw className="h-5 w-5" />
+            <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
       )}
