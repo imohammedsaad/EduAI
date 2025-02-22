@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getVideoDetails } from './youtube';
-
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export async function generateVideoSummary(videoUrl: string): Promise<{
@@ -45,7 +44,7 @@ export async function generateVideoSummary(videoUrl: string): Promise<{
 
   Guidelines:
   - Include exactly 10 main points covering all aspects of the video
-  - Each description should be 2-3 paragraphs with clear examples
+  - Each description should be 4-5 paragraphs with clear examples
   - Include 2-3 relevant learning resources per point
   - Resources should be from reputable educational sites
   - Focus on practical understanding and applications
@@ -97,7 +96,7 @@ export async function generateQuizQuestions(videoUrl: string): Promise<{
   Channel: ${videoDetails.channelTitle}
   Description: ${videoDetails.description}
 
-  Create 5 multiple-choice questions that test understanding of the key concepts.
+  Create 10 multiple-choice questions that test understanding of the key concepts.
   Format your response as a valid JSON array exactly like this example:
   [
     {
@@ -109,7 +108,7 @@ export async function generateQuizQuestions(videoUrl: string): Promise<{
   ]
 
   Guidelines:
-  - Create exactly 5 questions
+  - Create exactly 10 questions
   - Each question should have 4 options
   - Make questions progressively more challenging
   - Include a mix of concept understanding and application questions
@@ -138,8 +137,8 @@ export async function generateQuizQuestions(videoUrl: string): Promise<{
         throw new Error('Response is not an array');
       }
 
-      if (parsed.length !== 5) {
-        throw new Error(`Expected 5 questions, got ${parsed.length}`);
+      if (parsed.length !== 10) {
+        throw new Error(`Expected 10 questions, got ${parsed.length}`);
       }
 
       // Validate each question's structure
@@ -161,4 +160,22 @@ export async function generateQuizQuestions(videoUrl: string): Promise<{
     console.error('Error generating quiz:', error);
     throw error;
   }
-} 
+}
+
+export const generateRoadmap = async (url: string) => {
+  // TODO: Implement actual roadmap generation
+  return [
+    {
+      title: "Getting Started",
+      description: "Introduction to the basics",
+      videos: [
+        {
+          title: "Introduction",
+          timestamp: "0:00",
+          duration: "5:30",
+          completed: false
+        }
+      ]
+    }
+  ];
+}; 

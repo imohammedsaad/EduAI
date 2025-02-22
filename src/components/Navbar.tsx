@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Brain, Home, BookOpen, GraduationCap } from 'lucide-react';
+import { Brain, Home, BookOpen, GraduationCap, Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
@@ -10,6 +9,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home },
     { path: '/summary', label: 'Summary', icon: BookOpen },
     { path: '/quiz', label: 'Quiz', icon: GraduationCap },
+    { path: '/roadmap', label: 'My Roadmap', icon: Map },
   ];
 
   return (

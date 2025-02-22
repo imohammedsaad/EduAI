@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Youtube, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Timer from '@/components/Timer';
 import { generateQuizQuestions } from '@/services/gemini';
 interface Question {
   id: number;
@@ -67,6 +68,32 @@ const Quiz = () => {
     return correct;
   };
 
+  const calculatePercentage = () => {
+    return (calculateScore() / questions.length) * 100;
+  };
+
+  const getPerformanceMessage = (percentage: number) => {
+    if (percentage === 100) return { message: "Perfect Score! You're a Master! 🎯", color: "text-purple-400" };
+    if (percentage >= 80) return { message: "Excellent Work! Almost There! 🌟", color: "text-blue-400" };
+    if (percentage >= 60) return { message: "Good Job! Keep Learning! 📚", color: "text-green-400" };
+    if (percentage >= 40) return { message: "Nice Try! Room for Improvement! 💪", color: "text-yellow-400" };
+    return { message: "Keep Practicing! You Can Do Better! 🎯", color: "text-red-400" };
+  };
+
+  const getQuestionAnalysis = () => {
+    return questions.map(q => ({
+      correct: userAnswers[q.id] === q.correctAnswer,
+      question: q.text,
+      userAnswer: q.options[userAnswers[q.id]],
+      correctAnswer: q.options[q.correctAnswer]
+    }));
+  };
+
+  const handleTryAnother = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <motion.div
@@ -108,7 +135,7 @@ const Quiz = () => {
           </Button>
         </div>
       </form>
-
+     
       {questions.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -169,7 +196,7 @@ const Quiz = () => {
               onClick={() => setShowResults(true)}
               className="w-full bg-purple-500 hover:bg-purple-600"
             >
-              Submit Answers
+              Show Results
             </Button>
           )}
 
@@ -177,24 +204,75 @@ const Quiz = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 rounded-lg bg-gray-800/50 backdrop-blur-lg border border-gray-700 text-center"
+              className="space-y-6 p-6 rounded-lg bg-gray-800/50 backdrop-blur-lg border border-gray-700"
             >
-              <h3 className="text-2xl font-bold mb-2">
-                Your Score: {calculateScore()} / {questions.length}
-              </h3>
-              <p className="text-gray-400 mb-4">
-                {calculateScore() === questions.length
-                  ? 'Perfect score! Excellent work! 🎉'
-                  : calculateScore() > questions.length / 2
-                  ? 'Good job! Keep learning! 👍'
-                  : 'Keep practicing! You can do better! 💪'}
-              </p>
-              <Button
-                onClick={handleSubmit}
-                className="bg-purple-500 hover:bg-purple-600"
-              >
-                Try Another Quiz
-              </Button>
+              <div className="text-center">
+                <h3 className="text-3xl font-bold mb-2">Quiz Results</h3>
+                <div className="relative w-32 h-32 mx-auto mb-4">
+                  <svg className="w-full h-full" viewBox="0 0 36 36">
+                    <path
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#4B5563"
+                      strokeWidth="3"
+                    />
+                    <path
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#8B5CF6"
+                      strokeWidth="3"
+                      strokeDasharray={`${calculatePercentage()}, 100`}
+                    />
+                  </svg>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                    <div className="text-2xl font-bold">{calculateScore()}</div>
+                    <div className="text-sm text-gray-400">of {questions.length}</div>
+                  </div>
+                </div>
+                <p className={`text-xl font-semibold mb-6 ${getPerformanceMessage(calculatePercentage()).color}`}>
+                  {getPerformanceMessage(calculatePercentage()).message}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Detailed Analysis</h4>
+                {getQuestionAnalysis().map((analysis, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`p-4 rounded-lg ${
+                      analysis.correct ? 'bg-green-500/10' : 'bg-red-500/10'
+                    }`}
+                  >
+                    <p className="font-medium mb-2">{index + 1}. {analysis.question}</p>
+                    <div className="text-sm">
+                      <p className={`${analysis.correct ? 'text-green-400' : 'text-red-400'}`}>
+                        Your answer: {analysis.userAnswer}
+                      </p>
+                      {!analysis.correct && (
+                        <p className="text-green-400">
+                          Correct answer: {analysis.correctAnswer}
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="flex justify-center gap-4 pt-4">
+                <Button
+                  onClick={handleSubmit}
+                  className="bg-purple-500 hover:bg-purple-600"
+                >
+                  Try Another Quiz
+                </Button>
+              </div>
             </motion.div>
           )}
         </motion.div>
